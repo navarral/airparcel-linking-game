@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    <!-- Font Awesome -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   
+
+	<link rel="stylesheet" type="text/css" href="assets/style.css">
+	<title>Air Parcel Linking Game</title>
+	
+	<style>
+		body {
+		  font-family: "Lato", sans-serif;
+		}
+		
+		h1,h2,h3,h4 {	
+		color: #005A9C;
+		}
+		
+		.center {
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+			width: 40rem;
+		}
+		
+		.main {
+		  margin-left: 5%; /* Same width as the sidebar + left position in px */
+		  margin-right: 5%;
+		  font-size: 16px; /* Increased text to enable scrolling */
+		  padding: 0px 10px;
+		}
+
+		@media screen and (max-height: 450px) {
+		  .sidenav {padding-top: 15px;}
+		  .sidenav a {font-size: 18px;}
+		}
+						
+		.bd-callout {
+		  padding: 1.25rem;
+		  margin-top: 1.25rem;
+		  margin-bottom: 1.25rem;
+		  border: 1px solid #eee;
+		  border-left-width: .25rem;
+		  border-radius: .25rem;
+		}
+		.bd-callout-info {
+		  border-left-color: #2e86c1 ;
+		  border-left-width: 0.4rem;
+		}
+		.bd-callout-info { @include bs-callout-variant($bd-info); }
+	
+		/* Add an active class to the active dropdown button */
+		.active {
+		  background-color: transparent;
+		  color: black;
+		}
+
+		/* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
+		.dropdown-container {
+		  display: none;
+		  background-color: #d6eaf8;
+		  padding-left: 8px;
+		}
+
+		/* Optional: Style the caret down icon */
+		.fa-caret-down {
+		  float: right;
+		  padding-right: 8px;
+		}
+		
+		.green-codespan {
+		  color:    #1e8449 ;
+		  background-color:   #e9f7ef  ;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  /* font-size: 110%;*/
+		}
+		
+		.blue-codespan {
+		  color:  #1f618d;
+		  background-color:  #eaf2f8;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  /* font-size: 110%;*/
+		}
+		
+		.section-codespan {
+		  color:  #1f618d;
+		  background-color:  transparent;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  /* font-size: 110%;*/
+		}
+		
+		.lightblue-codespan {
+		  color:   #03a9f4 ;
+		  background-color:  #e1f5fe;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  /* font-size: 110%;*/
+		}
+		
+		.red-codespan {
+		  color:   #a93226 ;
+		  background-color: #fadbd8 ;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  /* font-size: 110%;*/
+		}
+		
+		.orange-codespan {
+		  color:   #d35400 ;
+		  background-color:   #f6ddcc  ;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  /* font-size: 110%;*/
+		}
+		
+		.grey-codespan {
+		  color:   #515a5a  ;
+		  background-color:  #ccd1d1  ;
+		  border-radius: 0.5rem;
+		  padding: 0.25rem;
+		  /* font-size: 110%;*/
+		}
+		
+		div {
+		  text-align: justify;
+		  text-justify: inter-word;
+		}
+
+	</style>
+ 
+
+	<script type="text/javascript" src="assets/jquery.min.js"></script>
+	<script type="text/javascript" src="assets/jquery-ui.min.js"></script>
+	<script type="text/javascript">
+
+		var correctCards = 0;
+		$( init );
+
+		function init() {
+
+		  // Hide the success message
+		  $('#successMessage').hide();
+		  $('#successMessage').css( {
+			left: '580px',
+			top: '250px',
+			width: 0,
+			height: 0
+		  } );
+
+		  // Reset the game
+		  correctCards = 0;
+		  $('#cardPile').html( '' );
+		  $('#cardSlots').html( '' );
+
+		  // Create the pile of shuffled cards
+		  var numbers = [ 
+		  '<img alt="AirParcel01" style="width:11rem;height:11rem;" src="assets/AirParcel_Patient1_card1.png">', 
+		  '<img alt="AirParcel01" style="width:11rem;height:11rem;" src="assets/AirParcel_Patient1_card2.png">', 
+		  '<img alt="AirParcel01" style="width:11rem;height:11rem;" src="assets/AirParcel_Patient1_card3.png">'];
+		  numbers.sort( function() { return Math.random() - .5 } );
+
+		  for ( var i=0; i<3; i++ ) {
+			var cardN = numbers[i].substring(numbers[i].indexOf('card') + 4)[0]; 
+			$('<div>' + numbers[i] + '</div>').data( 'number', cardN-1).attr( 'id', 'card'+cardN-1 ).appendTo( '#cardPile' ).draggable( {
+			  containment: '#content',
+			  stack: '#cardPile div',
+			  cursor: 'move',
+			  revert: true
+			} );
+		  }
+
+		  // Create the card slots
+		  var words = [ 'First visit', 'Second visit', 'Third visit'];
+		  for ( var i=1; i<=3; i++ ) {
+			$('<div>' + words[i-1] + '</div>').data( 'number',i-1 ).appendTo( '#cardSlots' ).droppable( {
+			  accept: '#cardPile div',
+			  hoverClass: 'hovered',
+			  drop: handleCardDrop
+			} );
+		  }
+
+		}
+
+		function handleCardDrop( event, ui ) {
+		  var slotNumber = $(this).data( 'number' );
+		  var cardNumber = ui.draggable.data( 'number' );
+		  console.log(slotNumber)
+		  console.log(cardNumber)
+		  // If the card was dropped to the correct slot,
+		  // change the card colour, position it directly
+		  // on top of the slot, and prevent it being dragged
+		  // again
+
+		  if ( slotNumber == cardNumber ) {
+			ui.draggable.addClass( 'correct' );
+			ui.draggable.draggable( 'disable' );
+			$(this).droppable( 'disable' );
+			ui.draggable.position( { of: $(this), my: 'left top', at: 'left top' } );
+			ui.draggable.draggable( 'option', 'revert', false );
+			correctCards++;
+		  } 
+		  
+		  // If all the cards have been placed correctly then display a message
+		  // and reset the cards for another go
+
+		  if ( correctCards == 3 ) {
+		    document.getElementById("patient1help").style.display="none";
+		    document.getElementById("patient1done").style.display="block";
+		  }
+
+		}
+
+	</script>
+
+</head>
+
+<body>
+
+<div class="main">
+	<h1>Air Parcel Linking Game</h1>
+	<h4 style="color:grey">Researchers Night Activity - 30th September 2022</h4> 
+	<p class="copyright"> <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+			<img alt="Creative Commons License" src="assets/88x31.png"></a> © 2022 - Copyright: Albert Navarro-Gallinad (Last update: July 2022)</p>	
+	<p style="font-size: .8rem;line-height: 1rem;">
+	The game drag and drop functionaly was adapted from © Elated.com | <a href="https://www.elated.com/articles/drag-and-drop-with-jquery-your-essential-guide/">Back to Tutorial</a> and the images used are a combination of individual images from <a href="https://www.diagrams.net/doc/faq/google-drive-import-diagram" target="_blank">diagrams</a> and <a href="ttps://www.flaticon.com/free-icon/" target="_blank">flaticon</a>.
+	This <span xmlns:dc="https://purl.org/dc/elements/1.1/" href="https://purl.org/dc/dcmitype/Text" rel="dc:type">work</span> by <a xmlns:cc="https://creativecommons.org/ns#" href="https://air-parcel-linking-game.github.io/" property="cc:attributionName" rel="cc:attributionURL">https://airparcel-linking-game.github.io/</a> is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 Unported License</a>.
+	</p>
+	 
+	
+	<hr title="Separator for header">
+		   
+	<section id="introduction" >
+		
+		<h2>What is an air parcel?</h2>
+		Your health is affected by the air you breathe every day. We can understand this as the parcel of air around you during your daily life. For example, the air around you when hiking with your family or crossing town to go to school.
+		<p></p>
+		<img alt="AirParcel01" class="center" src="assets/AirParcel01.png">
+		<p></p>
+		The air parcel has certain characteristics depending on the area and time of the year. The air you breathe during winter will be different than in summer. 
+		<p></p>
+		<img alt="AirParcel02" class="center" src="assets/AirParcel02.png">
+		<p></p>
+		Researchers are trying to understand how the different air parcels affect your health. But linking them with patients is a difficult task. First, you need to build the air parcel and then, place it in the right order for the patient.
+		<p></p>	
+	</section>
+	
+	<section id="patient1">
+		<h2>Patient 1: Laura</h2>
+		<div style="display:flex;">
+			<img alt="AirParcelPatient01" style="width:10rem;height:10rem;" src="assets/AirParcelPatient01.png">
+			<div>
+				<p></p>
+				Hi! My name is Laura and I am from Italy. I visited the doctor <b>three times</b> last year. Some of the visits were regular visits but others were because I was not feeling well But the doctor was not sure why I was not well so she decided to study my journey before each visit.
+				<p></p>
+			</div>
+		</div>
+		<p></p>
+		<ol type="1">
+			<li><b>First visit</b>: I remember climbing a mountain in the italian Alps for the whole week before the visit, and I was feeling well at that time. We climbed the mountain together with some friends during spring.</li>
+			<li><b>Second visit</b>: I remember that I was working hard in my office in the center of Milan during the week before the visit. I had problems breathing and that's why I went to the doctor. I rememeber this was a hot week in the summer.</li>
+			<li><b>Third visit</b>: I remember that I travelled to Rome for a conference a couple of weeks before the visit. This was right before Christmas and I was feeling okay, just a bit tired.</li>
+		</ol>
+		<p></p>	
+		<h4>Can you help the doctor order the air parcels for Laura?</h4>
+		<p></p>
+		<div id="cardPile">
+		  <div id="card1" style="position: relative;" class="ui-draggable">
+			<img alt="AirParcel01" class="center" src="assets/AirParcel_Patient1_card1.png">
+		  </div>
+		  <div id="card2" style="position: relative;" class="ui-draggable">
+			<img alt="AirParcel01" class="center" src="assets/AirParcel_Patient1_card2.png">
+		  </div>
+		  <div id="card3" style="position: relative;" class="ui-draggable">
+			<img alt="AirParcel01" class="center" src="assets/AirParcel_Patient1_card3.png">
+		  </div>
+		</div>
+		<div id="cardSlots">
+		  <div class="ui-droppable">First visit</div>
+		  <div class="ui-droppable">Second visit</div>
+		  <div class="ui-droppable">Third visit</div>
+	  </div>
+	  <p></p>
+	  <div class="alert alert-warning" role="alert" style="display:block;" id="patient1help">
+		The doctor still <b>needs your help</b>, please try to drag and drop the air parcels in the correct order for the patient. 
+	  </div>
+	  <div class="alert alert-success" role="alert" style="display:none;" id="patient1done">
+		<b>Well done!</b> Thanks to your help the doctor will study if the air Laura has been breathing for the last year is affecting her health.
+	  </div>
+	
+	</section>
+	
+	
+
+</div>	
+	<section id="contact" >
+
+		<h2>Contact</h2>		
+		
+		If you have any questions please do not hesitate to contact me at:	
+		<dt> 
+			<a href="mailto:anavarro@tcd.ie">anavarro@tcd.ie</a> | 
+			<a href="https://orcid.org/0000-0002-2336-753X" target="_blank">ORCID</a> | 
+			<a href="https://www.linkedin.com/in/albert-navarro-gallinad-987902170/" target="_blank">Linkedin</a> 
+		</dt> 	
+	</section>
+	<p></p>
+	<section id="acknowledgements" >
+		<h2>Acknowledgements</h2>		
+		This website was design with the financial support of <a href="https://helical-itn.eu/" target="_blank">HELICAL</a> as part of the European Union’s Horizon 2020 research and innovation programme under the Marie Sklodowska-Curie Grant Agreement No. 813545 at the <a href="https://www.adaptcentre.ie/" target="_blank">ADAPT Centre for Digital Content Technology</a> (grant number 13/RC/2106 P2) at <a href="https://www.tcd.ie/" target="_blank">Trinity College Dublin</a>.		
+	</section>
+	
+</div>
+
+
+</body>
+</html>

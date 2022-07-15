@@ -1,0 +1,101 @@
+/* Add some margin to the page and set a default font and colour */
+
+body {
+  margin: 30px;
+  font-family: "Georgia", serif;
+  line-height: 1.8em;
+  color: #333;
+}
+
+/* Give headings their own font */
+
+h1, h2, h3, h4 {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+/* Main content area */
+
+#content {
+  margin: 80px 70px;
+  text-align: center;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+
+/* Slots for final card positions */
+
+#cardSlots {
+  margin: 2rem auto 0 auto;
+  background:   #ebf5fb;
+}
+
+/* The initial pile of unsorted cards */
+
+#cardPile {
+  margin: 0 auto;
+  background:  #fef9e7 ;
+}
+
+#cardSlots, #cardPile {
+  width: 45rem;
+  height: 16rem;
+  padding: 2rem;
+  border: 2px solid #333;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  display: flex;
+  padding-left: 4rem;
+  
+}
+
+/* Individual cards and slots */
+
+#cardSlots div, #cardPile div {
+  float: left;
+  width: 12rem;
+  height: 12rem;
+  padding: 10px;
+  padding-top: 0.5rem;
+  padding-bottom: 0;
+  
+  border: 0px solid #333;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  margin: 0 0 0 10px;
+  background: #fff;
+}
+
+#cardSlots div:first-child, #cardPile div:first-child {
+  margin-left: 0;
+}
+
+#cardSlots div.hovered {
+  background:  #fef9e7 ;
+}
+
+#cardSlots div {
+  border-style: dashed;
+  font-size: 2.5rem;
+  line-height: 1.5;
+}
+
+#cardPile div {
+  background: transparent;
+  color: transparent;
+  font-size: 50px;
+
+}
+
+
+
+/* Individually coloured cards */
+
+#card1.correct { background: red; }
+#card2.correct { background: brown; }
+#card3.correct { background: orange; }
+
+
